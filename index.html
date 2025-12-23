@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unsplash URL Extractor</title>
+    <title>🌐 Universal URL Extractor Tool</title>
     <style>
         * {
             margin: 0;
@@ -19,7 +19,7 @@
         }
         
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -37,6 +37,11 @@
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
         }
         
         .content {
@@ -58,11 +63,49 @@
             margin-bottom: 15px;
             padding-bottom: 10px;
             border-bottom: 2px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .text-areas {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .text-areas {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .input-group label {
+            font-weight: bold;
+            color: #444;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         textarea {
             width: 100%;
-            height: 200px;
+            height: 250px;
             padding: 15px;
             border: 2px solid #ddd;
             border-radius: 10px;
@@ -70,11 +113,22 @@
             font-size: 14px;
             resize: vertical;
             transition: border-color 0.3s ease;
+            line-height: 1.5;
         }
         
         textarea:focus {
             outline: none;
             border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .html-input {
+            border-color: #4CAF50;
+        }
+        
+        .html-input:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
         }
         
         .buttons {
@@ -107,41 +161,188 @@
             background: #6c757d;
         }
         
-        .url-list {
-            background: white;
+        .success-btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+        }
+        
+        .warning-btn {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        }
+        
+        .url-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
             padding: 15px;
+            background: white;
             border-radius: 10px;
             border: 1px solid #ddd;
-            max-height: 300px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 200px;
+        }
+        
+        .filter-group label {
+            font-weight: bold;
+            color: #444;
+            font-size: 0.9rem;
+        }
+        
+        .filter-group select, .filter-group input {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .filter-group select:focus, .filter-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .url-list-container {
+            max-height: 400px;
             overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: white;
+        }
+        
+        .url-list {
+            padding: 0;
+            margin: 0;
+            list-style: none;
         }
         
         .url-item {
-            padding: 10px;
+            padding: 12px 15px;
             border-bottom: 1px solid #eee;
-            font-family: monospace;
-            word-break: break-all;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: background-color 0.2s ease;
+        }
+        
+        .url-item:hover {
+            background-color: #f8f9fa;
         }
         
         .url-item:last-child {
             border-bottom: none;
         }
         
-        .copy-icon {
-            color: #667eea;
+        .url-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .url-text {
+            font-family: monospace;
+            word-break: break-all;
+            color: #333;
+        }
+        
+        .url-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .url-domain {
+            background: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .url-type {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        
+        .url-actions {
+            display: flex;
+            gap: 10px;
+            margin-left: 15px;
+        }
+        
+        .action-btn {
+            background: transparent;
+            border: 1px solid #ddd;
+            padding: 6px 12px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 0.85rem;
+            color: #666;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .action-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-1px);
+        }
+        
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ddd;
         }
         
         .stats {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid #eaeaea;
+            color: #666;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
             color: #666;
         }
         
@@ -157,13 +358,54 @@
             transform: translateX(150%);
             transition: transform 0.3s ease;
             z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
         .notification.show {
             transform: translateX(0);
         }
         
+        .notification.error {
+            background: #dc3545;
+        }
+        
+        .notification.warning {
+            background: #ff9800;
+        }
+        
+        .domain-color {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .domain-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+        
+        .domain-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
         @media (max-width: 768px) {
+            .text-areas {
+                grid-template-columns: 1fr;
+            }
+            
             .buttons {
                 flex-direction: column;
             }
@@ -172,46 +414,166 @@
                 width: 100%;
                 justify-content: center;
             }
+            
+            .url-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .url-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🔍 Unsplash URL Extractor</h1>
-            <p>Paste conversation text to extract all Unsplash URLs</p>
+            <h1>🌐 Universal URL Extractor</h1>
+            <p>Extract ALL URLs from any text or HTML code - Not just Unsplash!</p>
         </div>
         
         <div class="content">
             <div class="input-section">
-                <h2>📝 Paste Conversation Text</h2>
-                <textarea id="conversationInput" placeholder="Paste your conversation here..."></textarea>
+                <h2>📥 Input Text</h2>
+                <div class="section-info">
+                    <span>💡</span>
+                    <span>Paste any text, HTML code, or mixed content below. URLs will be automatically extracted.</span>
+                </div>
+                
+                <div class="text-areas">
+                    <div class="input-group">
+                        <label for="textInput">📝 Plain Text / Mixed Content</label>
+                        <textarea id="textInput" placeholder="Paste your text here...
+Example:
+Check out my website: https://example.com
+And my GitHub: https://github.com/username
+
+Also here's some HTML:
+<a href='https://google.com'>Google</a>
+<img src='https://images.unsplash.com/photo-xxx' />
+
+More URLs:
+http://old-website.com
+https://api.example.com/data.json
+ftp://files.example.com (will be filtered out)"></textarea>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="htmlInput">🌐 HTML Code (Optional)</label>
+                        <textarea id="htmlInput" class="html-input" placeholder="Paste pure HTML code here...
+Example:
+<div>
+  <a href='https://google.com'>Visit Google</a>
+  <img src='https://picsum.photos/200' />
+  <script src='https://cdn.example.com/script.js'></script>
+  <link href='https://cdn.example.com/style.css' />
+</div>"></textarea>
+                    </div>
+                </div>
+                
+                <div class="url-filters">
+                    <div class="filter-group">
+                        <label for="protocolFilter">🌍 Protocol Filter</label>
+                        <select id="protocolFilter">
+                            <option value="all">All Protocols (http/https)</option>
+                            <option value="https">HTTPS Only</option>
+                            <option value="http">HTTP Only</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="domainFilter">🔍 Domain Filter (Optional)</label>
+                        <input type="text" id="domainFilter" placeholder="example.com, google.com">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="sortBy">📊 Sort By</label>
+                        <select id="sortBy">
+                            <option value="original">Original Order</option>
+                            <option value="domain">Domain Name</option>
+                            <option value="protocol">Protocol</option>
+                        </select>
+                    </div>
+                </div>
+                
                 <div class="buttons">
-                    <button onclick="extractUrls()">
-                        🔍 Extract URLs
+                    <button onclick="extractURLs()" class="success-btn">
+                        🔍 Extract All URLs
                     </button>
-                    <button onclick="clearText()" class="secondary-btn">
-                        🗑️ Clear Text
+                    <button onclick="clearAll()" class="secondary-btn">
+                        🗑️ Clear All
                     </button>
-                    <button onclick="viewGallery()">
-                        🖼️ View Gallery
+                    <button onclick="loadSampleData()" class="warning-btn">
+                        📋 Load Sample Data
+                    </button>
+                    <button onclick="downloadURLs()">
+                        💾 Download URLs
+                    </button>
+                    <button onclick="copyAllURLs()">
+                        📋 Copy All URLs
                     </button>
                 </div>
             </div>
             
             <div class="output-section">
-                <h2>📋 Extracted URLs</h2>
-                <div id="urlList" class="url-list">
-                    <div style="text-align: center; color: #999; padding: 20px;">
-                        URLs will appear here after extraction
+                <h2>📤 Extracted URLs</h2>
+                <div class="section-info">
+                    <span>📊</span>
+                    <span>Found <span id="totalCount">0</span> URLs. Click any URL to copy it.</span>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="httpCount">0</div>
+                        <div class="stat-label">HTTP URLs</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="httpsCount">0</div>
+                        <div class="stat-label">HTTPS URLs</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="uniqueDomains">0</div>
+                        <div class="stat-label">Unique Domains</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="fileUrls">0</div>
+                        <div class="stat-label">File URLs</div>
                     </div>
                 </div>
-                <div class="stats">
-                    <div id="urlCount">Found: 0 URLs</div>
-                    <div id="actionButtons" style="display: none;">
-                        <button onclick="copyAllUrls()" style="padding: 8px 15px; font-size: 0.9rem;">
-                            📋 Copy All
-                        </button>
+                
+                <div id="urlListContainer" class="url-list-container">
+                    <div id="emptyState" class="empty-state">
+                        <div style="font-size: 4rem; margin-bottom: 20px;">🔗</div>
+                        <h3>No URLs Extracted Yet</h3>
+                        <p>Enter text above and click "Extract All URLs" to begin</p>
+                    </div>
+                    <ul id="urlList" class="url-list" style="display: none;"></ul>
+                </div>
+                
+                <div class="domain-legend" id="domainLegend" style="display: none;">
+                    <div class="domain-item">
+                        <span class="domain-color" style="background: #4CAF50;"></span>
+                        <span>HTTPS URLs</span>
+                    </div>
+                    <div class="domain-item">
+                        <span class="domain-color" style="background: #2196F3;"></span>
+                        <span>HTTP URLs</span>
+                    </div>
+                    <div class="domain-item">
+                        <span class="domain-color" style="background: #FF9800;"></span>
+                        <span>Image URLs</span>
+                    </div>
+                    <div class="domain-item">
+                        <span class="domain-color" style="background: #9C27B0;"></span>
+                        <span>File URLs</span>
                     </div>
                 </div>
             </div>
@@ -219,102 +581,450 @@
     </div>
     
     <div id="notification" class="notification">
-        Copied to clipboard!
+        <span>✅</span>
+        <span id="notificationText">Copied to clipboard!</span>
     </div>
 
     <script>
-        function extractUrls() {
-            const text = document.getElementById('conversationInput').value;
-            const urlList = document.getElementById('urlList');
-            const urlCount = document.getElementById('urlCount');
-            const actionButtons = document.getElementById('actionButtons');
+        // Color scheme for different URL types
+        const URL_COLORS = {
+            'https': '#4CAF50',
+            'http': '#2196F3',
+            'image': '#FF9800',
+            'file': '#9C27B0',
+            'api': '#607D8B',
+            'default': '#666'
+        };
+
+        // Common file extensions
+        const FILE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', 
+                                 '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', 
+                                 '.pptx', '.zip', '.rar', '.tar', '.gz', '.mp3', 
+                                 '.mp4', '.avi', '.mov', '.json', '.xml', '.txt',
+                                 '.css', '.js', '.html', '.php', '.asp', '.aspx'];
+
+        let extractedURLs = [];
+        let domainColors = {};
+
+        function extractURLs() {
+            const textInput = document.getElementById('textInput').value;
+            const htmlInput = document.getElementById('htmlInput').value;
+            const protocolFilter = document.getElementById('protocolFilter').value;
+            const domainFilter = document.getElementById('domainFilter').value.toLowerCase();
+            const sortBy = document.getElementById('sortBy').value;
             
-            // Clear previous results
-            urlList.innerHTML = '';
+            // Combine inputs
+            const combinedText = textInput + '\n' + htmlInput;
             
-            // Find Unsplash URLs using regex
-            const unsplashRegex = /https:\/\/images\.unsplash\.com[^\s]*/g;
-            const urls = text.match(unsplashRegex) || [];
-            
-            if (urls.length === 0) {
-                urlList.innerHTML = `
-                    <div style="text-align: center; color: #999; padding: 20px;">
-                        ❌ No Unsplash URLs found in the text
-                    </div>
-                `;
-                urlCount.textContent = 'Found: 0 URLs';
-                actionButtons.style.display = 'none';
-                showNotification('No Unsplash URLs found!');
+            if (!combinedText.trim()) {
+                showNotification('Please enter some text to extract URLs from!', 'error');
                 return;
             }
             
-            // Display each URL
-            urls.forEach((url, index) => {
-                const urlItem = document.createElement('div');
-                urlItem.className = 'url-item';
-                urlItem.innerHTML = `
-                    <div style="flex-grow: 1;">
-                        <strong>${index + 1}.</strong> ${url}
-                    </div>
-                    <div class="copy-icon" onclick="copySingleUrl('${url}', ${index + 1})">
-                        📋
-                    </div>
-                `;
-                urlList.appendChild(urlItem);
-            });
+            // Extract URLs using comprehensive regex
+            const urlRegex = /(https?:\/\/[^\s"'<>()]+|www\.[^\s"'<>()]+)/gi;
+            let urls = combinedText.match(urlRegex) || [];
             
-            urlCount.textContent = `Found: ${urls.length} URL${urls.length > 1 ? 's' : ''}`;
-            actionButtons.style.display = 'block';
+            // Process and clean URLs
+            urls = urls
+                .map(url => {
+                    // Add http:// to www URLs
+                    if (url.toLowerCase().startsWith('www.')) {
+                        return 'http://' + url;
+                    }
+                    return url;
+                })
+                .filter(url => {
+                    // Filter by protocol
+                    if (protocolFilter === 'https') return url.startsWith('https://');
+                    if (protocolFilter === 'http') return url.startsWith('http://');
+                    return url.startsWith('http://') || url.startsWith('https://');
+                })
+                .filter(url => {
+                    // Filter by domain if specified
+                    if (!domainFilter) return true;
+                    const domains = domainFilter.split(',').map(d => d.trim());
+                    return domains.some(domain => url.toLowerCase().includes(domain));
+                })
+                .filter(url => {
+                    // Remove trailing punctuation
+                    return url.replace(/[.,;:!?)]+$/, '');
+                })
+                .map(url => {
+                    // Remove common trailing characters
+                    return url.replace(/['"<>()\\]+$/, '');
+                });
             
-            // Store URLs for gallery view
-            localStorage.setItem('unsplashUrls', JSON.stringify(urls));
+            // Remove duplicates while preserving order
+            urls = [...new Set(urls)];
             
-            showNotification(`Found ${urls.length} Unsplash URL${urls.length > 1 ? 's' : ''}!`);
+            // Apply sorting
+            if (sortBy === 'domain') {
+                urls.sort((a, b) => {
+                    const domainA = getDomain(a).toLowerCase();
+                    const domainB = getDomain(b).toLowerCase();
+                    return domainA.localeCompare(domainB);
+                });
+            } else if (sortBy === 'protocol') {
+                urls.sort((a, b) => {
+                    const protocolA = a.startsWith('https') ? 1 : 0;
+                    const protocolB = b.startsWith('https') ? 1 : 0;
+                    return protocolB - protocolA;
+                });
+            }
+            
+            extractedURLs = urls;
+            displayURLs(urls);
         }
 
-        function copySingleUrl(url, index) {
-            navigator.clipboard.writeText(url).then(() => {
-                showNotification(`Copied URL ${index}!`);
-            });
-        }
-
-        function copyAllUrls() {
-            const urlItems = document.querySelectorAll('.url-item');
-            const urls = Array.from(urlItems).map(item => 
-                item.textContent.replace('📋', '').replace(/^\d+\.\s*/, '').trim()
-            );
-            
-            navigator.clipboard.writeText(urls.join('\n')).then(() => {
-                showNotification(`Copied ${urls.length} URLs to clipboard!`);
-            });
-        }
-
-        function clearText() {
-            document.getElementById('conversationInput').value = '';
-            document.getElementById('urlList').innerHTML = `
-                <div style="text-align: center; color: #999; padding: 20px;">
-                    URLs will appear here after extraction
-                </div>
-            `;
-            document.getElementById('urlCount').textContent = 'Found: 0 URLs';
-            document.getElementById('actionButtons').style.display = 'none';
-            showNotification('Text cleared!');
-        }
-
-        function viewGallery() {
-            const urls = JSON.parse(localStorage.getItem('unsplashUrls') || '[]');
-            if (urls.length > 0) {
-                // Open gallery in new tab with URLs
-                const galleryUrl = `gallery.html?urls=${encodeURIComponent(JSON.stringify(urls))}`;
-                window.open(galleryUrl, '_blank');
-            } else {
-                showNotification('No URLs to display in gallery!');
+        function getDomain(url) {
+            try {
+                const urlObj = new URL(url);
+                return urlObj.hostname;
+            } catch {
+                return url.split('/')[2] || url;
             }
         }
 
-        function showNotification(message) {
+        function getURLType(url) {
+            if (url.startsWith('https://')) return 'https';
+            if (url.startsWith('http://')) return 'http';
+            return 'default';
+        }
+
+        function isFileURL(url) {
+            const lowerUrl = url.toLowerCase();
+            return FILE_EXTENSIONS.some(ext => lowerUrl.includes(ext));
+        }
+
+        function isImageURL(url) {
+            const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', '.webp'];
+            const lowerUrl = url.toLowerCase();
+            return imageExtensions.some(ext => lowerUrl.includes(ext));
+        }
+
+        function getDomainColor(domain) {
+            if (!domainColors[domain]) {
+                // Generate a consistent color for each domain
+                const colors = ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0', '#607D8B', 
+                              '#795548', '#FF5722', '#009688', '#3F51B5', '#E91E63'];
+                const index = Object.keys(domainColors).length % colors.length;
+                domainColors[domain] = colors[index];
+            }
+            return domainColors[domain];
+        }
+
+        function displayURLs(urls) {
+            const urlList = document.getElementById('urlList');
+            const emptyState = document.getElementById('emptyState');
+            const domainLegend = document.getElementById('domainLegend');
+            const totalCount = document.getElementById('totalCount');
+            const httpCount = document.getElementById('httpCount');
+            const httpsCount = document.getElementById('httpsCount');
+            const fileUrls = document.getElementById('fileUrls');
+            const uniqueDomains = document.getElementById('uniqueDomains');
+            
+            if (urls.length === 0) {
+                urlList.style.display = 'none';
+                emptyState.style.display = 'block';
+                domainLegend.style.display = 'none';
+                totalCount.textContent = '0';
+                showNotification('No URLs found matching your criteria!', 'warning');
+                return;
+            }
+            
+            // Calculate statistics
+            const domains = new Set();
+            let httpUrls = 0;
+            let httpsUrls = 0;
+            let fileUrlCount = 0;
+            
+            urls.forEach(url => {
+                domains.add(getDomain(url));
+                if (url.startsWith('http://')) httpUrls++;
+                if (url.startsWith('https://')) httpsUrls++;
+                if (isFileURL(url)) fileUrlCount++;
+            });
+            
+            // Update statistics
+            totalCount.textContent = urls.length;
+            httpCount.textContent = httpUrls;
+            httpsCount.textContent = httpsUrls;
+            uniqueDomains.textContent = domains.size;
+            fileUrls.textContent = fileUrlCount;
+            
+            // Clear and populate URL list
+            urlList.innerHTML = '';
+            domainColors = {}; // Reset domain colors
+            
+            urls.forEach((url, index) => {
+                const domain = getDomain(url);
+                const urlType = getURLType(url);
+                const isFile = isFileURL(url);
+                const isImage = isImageURL(url);
+                const domainColor = getDomainColor(domain);
+                
+                const li = document.createElement('li');
+                li.className = 'url-item';
+                
+                // Determine URL type for styling
+                let typeLabel = urlType.toUpperCase();
+                let color = URL_COLORS[urlType];
+                
+                if (isImage) {
+                    typeLabel = 'IMAGE';
+                    color = URL_COLORS.image;
+                } else if (isFile) {
+                    typeLabel = 'FILE';
+                    color = URL_COLORS.file;
+                } else if (url.toLowerCase().includes('api')) {
+                    typeLabel = 'API';
+                    color = URL_COLORS.api;
+                }
+                
+                li.innerHTML = `
+                    <div class="url-content">
+                        <div class="url-text">${index + 1}. ${url}</div>
+                        <div class="url-meta">
+                            <span class="url-domain" style="background-color: ${domainColor}20; color: ${domainColor};">
+                                <span class="domain-color" style="background: ${domainColor};"></span>
+                                ${domain}
+                            </span>
+                            <span class="url-type" style="background-color: ${color}20; color: ${color};">
+                                ${typeLabel}
+                            </span>
+                            <span>${url.length} chars</span>
+                        </div>
+                    </div>
+                    <div class="url-actions">
+                        <button class="action-btn copy-btn" onclick="copyURL('${url}', ${index + 1})">
+                            📋 Copy
+                        </button>
+                        <button class="action-btn" onclick="openURL('${url}')" title="Open in new tab">
+                            ↗️ Open
+                        </button>
+                        <button class="action-btn" onclick="testURL('${url}', ${index + 1})" title="Test URL">
+                            🔗 Test
+                        </button>
+                    </div>
+                `;
+                
+                urlList.appendChild(li);
+            });
+            
+            urlList.style.display = 'block';
+            emptyState.style.display = 'none';
+            domainLegend.style.display = 'flex';
+            
+            showNotification(`Extracted ${urls.length} URLs from ${domains.size} unique domains!`, 'success');
+        }
+
+        function copyURL(url, index) {
+            navigator.clipboard.writeText(url).then(() => {
+                showNotification(`Copied URL #${index} to clipboard!`);
+            }).catch(err => {
+                showNotification('Failed to copy URL!', 'error');
+                console.error('Copy failed:', err);
+            });
+        }
+
+        function copyAllURLs() {
+            if (extractedURLs.length === 0) {
+                showNotification('No URLs to copy!', 'warning');
+                return;
+            }
+            
+            const allURLs = extractedURLs.join('\n');
+            navigator.clipboard.writeText(allURLs).then(() => {
+                showNotification(`Copied ${extractedURLs.length} URLs to clipboard!`);
+            });
+        }
+
+        function openURL(url) {
+            window.open(url, '_blank', 'noopener,noreferrer');
+        }
+
+        function testURL(url, index) {
+            showNotification(`Testing URL #${index}...`, 'warning');
+            
+            // Simple HEAD request to test URL
+            fetch(url, { method: 'HEAD', mode: 'no-cors' })
+                .then(() => {
+                    showNotification(`URL #${index} is accessible!`);
+                })
+                .catch(() => {
+                    showNotification(`URL #${index} might be blocked by CORS or unreachable`, 'warning');
+                });
+        }
+
+        function clearAll() {
+            document.getElementById('textInput').value = '';
+            document.getElementById('htmlInput').value = '';
+            document.getElementById('domainFilter').value = '';
+            extractedURLs = [];
+            domainColors = {};
+            
+            const urlList = document.getElementById('urlList');
+            const emptyState = document.getElementById('emptyState');
+            const domainLegend = document.getElementById('domainLegend');
+            
+            urlList.style.display = 'none';
+            emptyState.style.display = 'block';
+            domainLegend.style.display = 'none';
+            
+            document.getElementById('totalCount').textContent = '0';
+            document.getElementById('httpCount').textContent = '0';
+            document.getElementById('httpsCount').textContent = '0';
+            document.getElementById('uniqueDomains').textContent = '0';
+            document.getElementById('fileUrls').textContent = '0';
+            
+            showNotification('All inputs and results cleared!');
+        }
+
+        function loadSampleData() {
+            const sampleText = `🌐 Welcome to the Universal URL Extractor!
+
+Here are various types of URLs:
+
+🔗 Basic URLs:
+https://www.google.com
+http://example.com
+https://github.com/username
+http://old-website.org
+
+🖼️ Image URLs:
+https://images.unsplash.com/photo-1506744038136-46273834b3fb
+https://picsum.photos/200/300
+http://placekitten.com/200/300
+https://example.com/images/logo.png
+
+📁 File URLs:
+https://example.com/document.pdf
+http://downloads.example.com/file.zip
+https://cdn.example.com/script.js
+https://fonts.googleapis.com/css?family=Roboto
+
+🎥 Media URLs:
+https://www.youtube.com/watch?v=dQw4w9WgXcQ
+https://vimeo.com/123456789
+https://soundcloud.com/artist/track
+
+🛒 E-commerce:
+https://www.amazon.com/dp/B08N5WRWNW
+https://www.ebay.com/itm/1234567890
+
+📚 Educational:
+https://www.coursera.org/learn/machine-learning
+https://www.khanacademy.org/
+https://arxiv.org/abs/2101.12345
+
+📄 Here's some HTML code with URLs:
+<a href="https://www.google.com" target="_blank">Google</a>
+<img src="https://via.placeholder.com/150" alt="Placeholder">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+🌍 API Endpoints:
+https://api.github.com/users/octocat
+https://jsonplaceholder.typicode.com/posts
+http://api.openweathermap.org/data/2.5/weather
+
+🔐 Secure Login URLs:
+https://accounts.google.com/signin
+https://www.facebook.com/login/
+
+📱 App Store Links:
+https://apps.apple.com/app/id123456789
+https://play.google.com/store/apps/details?id=com.example.app`;
+
+            const sampleHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample Page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="https://www.example.com">Home</a>
+            <a href="https://www.example.com/about">About</a>
+            <a href="https://www.example.com/contact">Contact</a>
+        </nav>
+    </header>
+    
+    <main>
+        <section class="hero">
+            <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba" alt="Mountains" width="800" height="400">
+            <h1>Welcome to Our Website</h1>
+            <p>Check out our <a href="https://www.example.com/services">services</a></p>
+        </section>
+        
+        <section class="resources">
+            <h2>Resources</h2>
+            <ul>
+                <li><a href="https://www.example.com/docs/manual.pdf">Download Manual</a></li>
+                <li><a href="https://www.example.com/videos/tutorial.mp4">Watch Tutorial</a></li>
+                <li><a href="https://api.example.com/data.json">API Data</a></li>
+            </ul>
+        </section>
+        
+        <section class="external-links">
+            <h2>External Links</h2>
+            <a href="https://twitter.com/example">Twitter</a>
+            <a href="https://www.linkedin.com/company/example">LinkedIn</a>
+            <a href="https://github.com/example">GitHub</a>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 Example Corp. All rights reserved.</p>
+        <p>Email: <a href="mailto:support@example.com">support@example.com</a></p>
+        <p>Phone: <a href="tel:+1234567890">+1 (234) 567-890</a></p>
+    </footer>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.example.com/custom.js"></script>
+</body>
+</html>`;
+
+            document.getElementById('textInput').value = sampleText;
+            document.getElementById('htmlInput').value = sampleHTML;
+            
+            showNotification('Sample data loaded! Click "Extract All URLs" to see them.', 'success');
+        }
+
+        function downloadURLs() {
+            if (extractedURLs.length === 0) {
+                showNotification('No URLs to download!', 'warning');
+                return;
+            }
+            
+            const content = extractedURLs.join('\n');
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'extracted_urls.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification(`Downloaded ${extractedURLs.length} URLs as extracted_urls.txt`);
+        }
+
+        function showNotification(message, type = 'success') {
             const notification = document.getElementById('notification');
-            notification.textContent = message;
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.className = 'notification';
+            notification.classList.add(type);
             notification.classList.add('show');
             
             setTimeout(() => {
@@ -322,22 +1032,39 @@
             }, 3000);
         }
 
-        // Load sample conversation on page load
+        // Auto-extract when filters change
+        document.getElementById('protocolFilter').addEventListener('change', function() {
+            if (extractedURLs.length > 0) {
+                extractURLs();
+            }
+        });
+
+        document.getElementById('domainFilter').addEventListener('input', function() {
+            if (extractedURLs.length > 0) {
+                // Debounce the extraction
+                clearTimeout(this.debounceTimeout);
+                this.debounceTimeout = setTimeout(() => {
+                    if (extractedURLs.length > 0) {
+                        extractURLs();
+                    }
+                }, 500);
+            }
+        });
+
+        document.getElementById('sortBy').addEventListener('change', function() {
+            if (extractedURLs.length > 0) {
+                displayURLs(extractedURLs);
+            }
+        });
+
+        // Load sample data on first visit
         window.onload = () => {
-            const sampleText = `Here are some beautiful Unsplash images:
-            
-            1. Landscape: https://images.unsplash.com/photo-1506744038136-46273834b3fb
-            2. Mountains: https://images.unsplash.com/photo-1519681393784-d120267933ba
-            3. Forest: https://images.unsplash.com/photo-1441974231531-c6227db76b6e
-            4. Sunset: https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05
-            
-            Check out these nature photos from Unsplash!
-            
-            More images:
-            - https://images.unsplash.com/photo-1501854140801-50d01698950b
-            - https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07`;
-            
-            document.getElementById('conversationInput').value = sampleText;
+            setTimeout(() => {
+                if (!localStorage.getItem('sampleLoaded')) {
+                    loadSampleData();
+                    localStorage.setItem('sampleLoaded', 'true');
+                }
+            }, 1000);
         };
     </script>
 </body>
