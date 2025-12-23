@@ -3,1069 +3,367 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌐 Universal URL Extractor Tool</title>
+    <title>Universal URL Extractor</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            background: #f0f2f5;
             padding: 20px;
+            min-height: 100vh;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             overflow: hidden;
         }
         
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #2c3e50;
             color: white;
-            padding: 30px;
+            padding: 20px;
             text-align: center;
         }
         
         .header h1 {
-            font-size: 2.5rem;
             margin-bottom: 10px;
         }
         
-        .header p {
-            opacity: 0.9;
-            font-size: 1.1rem;
-        }
-        
         .content {
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
+            padding: 20px;
         }
         
-        .input-section, .output-section {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 15px;
-            border: 1px solid #eaeaea;
-        }
-        
-        h2 {
-            color: #333;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #667eea;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .section-info {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .text-areas {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-        
-        @media (max-width: 768px) {
-            .text-areas {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .input-group label {
-            font-weight: bold;
-            color: #444;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .input-area {
+            margin-bottom: 20px;
         }
         
         textarea {
             width: 100%;
-            height: 250px;
+            height: 200px;
             padding: 15px;
             border: 2px solid #ddd;
-            border-radius: 10px;
-            font-family: monospace;
+            border-radius: 8px;
             font-size: 14px;
             resize: vertical;
-            transition: border-color 0.3s ease;
-            line-height: 1.5;
         }
         
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        .html-input {
-            border-color: #4CAF50;
-        }
-        
-        .html-input:focus {
-            border-color: #4CAF50;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
-        }
-        
-        .buttons {
+        .controls {
+            margin: 15px 0;
             display: flex;
-            gap: 15px;
+            gap: 10px;
             flex-wrap: wrap;
-            margin-top: 20px;
         }
         
         button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 10px 20px;
+            background: #3498db;
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 14px;
         }
         
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            background: #2980b9;
         }
         
-        .secondary-btn {
-            background: #6c757d;
+        .results {
+            margin-top: 20px;
         }
         
-        .success-btn {
-            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
-        }
-        
-        .warning-btn {
-            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
-        }
-        
-        .url-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 15px;
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-        }
-        
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            min-width: 200px;
-        }
-        
-        .filter-group label {
-            font-weight: bold;
-            color: #444;
-            font-size: 0.9rem;
-        }
-        
-        .filter-group select, .filter-group input {
-            padding: 8px 12px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 0.9rem;
-        }
-        
-        .filter-group select:focus, .filter-group input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
-        .url-list-container {
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background: white;
+        .results h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
         }
         
         .url-list {
-            padding: 0;
-            margin: 0;
-            list-style: none;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            background: #f9f9f9;
         }
         
         .url-item {
-            padding: 12px 15px;
+            padding: 10px;
             border-bottom: 1px solid #eee;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background-color 0.2s ease;
-        }
-        
-        .url-item:hover {
-            background-color: #f8f9fa;
         }
         
         .url-item:last-child {
             border-bottom: none;
         }
         
-        .url-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        
         .url-text {
             font-family: monospace;
             word-break: break-all;
-            color: #333;
-        }
-        
-        .url-meta {
-            display: flex;
-            gap: 15px;
-            font-size: 0.85rem;
-            color: #666;
-        }
-        
-        .url-domain {
-            background: #e9ecef;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-        
-        .url-type {
-            background: #d1ecf1;
-            color: #0c5460;
-            padding: 2px 8px;
-            border-radius: 4px;
-        }
-        
-        .url-actions {
-            display: flex;
-            gap: 10px;
-            margin-left: 15px;
-        }
-        
-        .action-btn {
-            background: transparent;
-            border: 1px solid #ddd;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            color: #666;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .action-btn:hover {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-            transform: translateY(-1px);
+            flex: 1;
         }
         
         .copy-btn {
-            background: #28a745;
-            color: white;
-            border-color: #28a745;
+            margin-left: 10px;
+            padding: 5px 10px;
+            background: #27ae60;
+            font-size: 12px;
         }
         
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #666;
-        }
-        
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: #ddd;
+        .copy-btn:hover {
+            background: #219653;
         }
         
         .stats {
+            margin: 15px 0;
+            padding: 10px;
+            background: #e8f4fc;
+            border-radius: 5px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #eaeaea;
-            color: #666;
-        }
-        
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #667eea;
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            color: #666;
+            gap: 20px;
         }
         
         .notification {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #4CAF50;
+            background: #27ae60;
             color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transform: translateX(150%);
-            transition: transform 0.3s ease;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
         }
         
         .notification.show {
-            transform: translateX(0);
+            display: block;
+            animation: fadeInOut 3s;
         }
         
-        .notification.error {
-            background: #dc3545;
-        }
-        
-        .notification.warning {
-            background: #ff9800;
-        }
-        
-        .domain-color {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 5px;
-        }
-        
-        .domain-legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 15px;
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-        }
-        
-        .domain-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-        }
-        
-        @media (max-width: 768px) {
-            .text-areas {
-                grid-template-columns: 1fr;
-            }
-            
-            .buttons {
-                flex-direction: column;
-            }
-            
-            button {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .url-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            
-            .url-actions {
-                width: 100%;
-                justify-content: flex-end;
-            }
-            
-            .stats {
-                flex-direction: column;
-                gap: 15px;
-            }
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🌐 Universal URL Extractor</h1>
-            <p>Extract ALL URLs from any text or HTML code - Not just Unsplash!</p>
+            <h1>🔗 Universal URL Extractor</h1>
+            <p>Extract ALL URLs from any text or code</p>
         </div>
         
         <div class="content">
-            <div class="input-section">
-                <h2>📥 Input Text</h2>
-                <div class="section-info">
-                    <span>💡</span>
-                    <span>Paste any text, HTML code, or mixed content below. URLs will be automatically extracted.</span>
-                </div>
-                
-                <div class="text-areas">
-                    <div class="input-group">
-                        <label for="textInput">📝 Plain Text / Mixed Content</label>
-                        <textarea id="textInput" placeholder="Paste your text here...
+            <div class="input-area">
+                <h3>Paste your text or HTML code here:</h3>
+                <textarea id="inputText" placeholder="Paste any text, HTML code, or mixed content here...
 Example:
-Check out my website: https://example.com
-And my GitHub: https://github.com/username
-
-Also here's some HTML:
-<a href='https://google.com'>Google</a>
-<img src='https://images.unsplash.com/photo-xxx' />
-
-More URLs:
-http://old-website.com
-https://api.example.com/data.json
-ftp://files.example.com (will be filtered out)"></textarea>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="htmlInput">🌐 HTML Code (Optional)</label>
-                        <textarea id="htmlInput" class="html-input" placeholder="Paste pure HTML code here...
-Example:
-<div>
-  <a href='https://google.com'>Visit Google</a>
-  <img src='https://picsum.photos/200' />
-  <script src='https://cdn.example.com/script.js'></script>
-  <link href='https://cdn.example.com/style.css' />
-</div>"></textarea>
-                    </div>
-                </div>
+Visit my site: https://example.com
+HTML: <a href='https://google.com'>Google</a>
+Image: <img src='https://images.unsplash.com/photo-1506744038136-46273834b3fb' />
+API: https://api.example.com/data.json"></textarea>
                 
-                <div class="url-filters">
-                    <div class="filter-group">
-                        <label for="protocolFilter">🌍 Protocol Filter</label>
-                        <select id="protocolFilter">
-                            <option value="all">All Protocols (http/https)</option>
-                            <option value="https">HTTPS Only</option>
-                            <option value="http">HTTP Only</option>
-                        </select>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label for="domainFilter">🔍 Domain Filter (Optional)</label>
-                        <input type="text" id="domainFilter" placeholder="example.com, google.com">
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label for="sortBy">📊 Sort By</label>
-                        <select id="sortBy">
-                            <option value="original">Original Order</option>
-                            <option value="domain">Domain Name</option>
-                            <option value="protocol">Protocol</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="buttons">
-                    <button onclick="extractURLs()" class="success-btn">
-                        🔍 Extract All URLs
-                    </button>
-                    <button onclick="clearAll()" class="secondary-btn">
-                        🗑️ Clear All
-                    </button>
-                    <button onclick="loadSampleData()" class="warning-btn">
-                        📋 Load Sample Data
-                    </button>
-                    <button onclick="downloadURLs()">
-                        💾 Download URLs
-                    </button>
-                    <button onclick="copyAllURLs()">
-                        📋 Copy All URLs
-                    </button>
+                <div class="controls">
+                    <button onclick="extractURLs()">🔍 Extract URLs</button>
+                    <button onclick="clearText()">🗑️ Clear</button>
+                    <button onclick="loadExample()">📋 Load Example</button>
+                    <button onclick="copyAllURLs()">📋 Copy All URLs</button>
                 </div>
             </div>
             
-            <div class="output-section">
-                <h2>📤 Extracted URLs</h2>
-                <div class="section-info">
-                    <span>📊</span>
-                    <span>Found <span id="totalCount">0</span> URLs. Click any URL to copy it.</span>
-                </div>
-                
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-value" id="httpCount">0</div>
-                        <div class="stat-label">HTTP URLs</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="httpsCount">0</div>
-                        <div class="stat-label">HTTPS URLs</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="uniqueDomains">0</div>
-                        <div class="stat-label">Unique Domains</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="fileUrls">0</div>
-                        <div class="stat-label">File URLs</div>
-                    </div>
-                </div>
-                
-                <div id="urlListContainer" class="url-list-container">
-                    <div id="emptyState" class="empty-state">
-                        <div style="font-size: 4rem; margin-bottom: 20px;">🔗</div>
-                        <h3>No URLs Extracted Yet</h3>
-                        <p>Enter text above and click "Extract All URLs" to begin</p>
-                    </div>
-                    <ul id="urlList" class="url-list" style="display: none;"></ul>
-                </div>
-                
-                <div class="domain-legend" id="domainLegend" style="display: none;">
-                    <div class="domain-item">
-                        <span class="domain-color" style="background: #4CAF50;"></span>
-                        <span>HTTPS URLs</span>
-                    </div>
-                    <div class="domain-item">
-                        <span class="domain-color" style="background: #2196F3;"></span>
-                        <span>HTTP URLs</span>
-                    </div>
-                    <div class="domain-item">
-                        <span class="domain-color" style="background: #FF9800;"></span>
-                        <span>Image URLs</span>
-                    </div>
-                    <div class="domain-item">
-                        <span class="domain-color" style="background: #9C27B0;"></span>
-                        <span>File URLs</span>
-                    </div>
+            <div class="stats">
+                <div>Total URLs: <span id="totalCount">0</span></div>
+                <div>HTTP URLs: <span id="httpCount">0</span></div>
+                <div>HTTPS URLs: <span id="httpsCount">0</span></div>
+            </div>
+            
+            <div class="results">
+                <h3>Extracted URLs:</h3>
+                <div id="urlList" class="url-list">
+                    <p style="text-align: center; color: #999; padding: 20px;">
+                        URLs will appear here after extraction
+                    </p>
                 </div>
             </div>
         </div>
     </div>
     
     <div id="notification" class="notification">
-        <span>✅</span>
-        <span id="notificationText">Copied to clipboard!</span>
+        ✅ Copied to clipboard!
     </div>
 
     <script>
-        // Color scheme for different URL types
-        const URL_COLORS = {
-            'https': '#4CAF50',
-            'http': '#2196F3',
-            'image': '#FF9800',
-            'file': '#9C27B0',
-            'api': '#607D8B',
-            'default': '#666'
-        };
-
-        // Common file extensions
-        const FILE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', 
-                                 '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', 
-                                 '.pptx', '.zip', '.rar', '.tar', '.gz', '.mp3', 
-                                 '.mp4', '.avi', '.mov', '.json', '.xml', '.txt',
-                                 '.css', '.js', '.html', '.php', '.asp', '.aspx'];
-
-        let extractedURLs = [];
-        let domainColors = {};
-
+        // Simple and reliable URL extraction
         function extractURLs() {
-            const textInput = document.getElementById('textInput').value;
-            const htmlInput = document.getElementById('htmlInput').value;
-            const protocolFilter = document.getElementById('protocolFilter').value;
-            const domainFilter = document.getElementById('domainFilter').value.toLowerCase();
-            const sortBy = document.getElementById('sortBy').value;
-            
-            // Combine inputs
-            const combinedText = textInput + '\n' + htmlInput;
-            
-            if (!combinedText.trim()) {
-                showNotification('Please enter some text to extract URLs from!', 'error');
-                return;
-            }
-            
-            // Extract URLs using comprehensive regex
-            const urlRegex = /(https?:\/\/[^\s"'<>()]+|www\.[^\s"'<>()]+)/gi;
-            let urls = combinedText.match(urlRegex) || [];
-            
-            // Process and clean URLs
-            urls = urls
-                .map(url => {
-                    // Add http:// to www URLs
-                    if (url.toLowerCase().startsWith('www.')) {
-                        return 'http://' + url;
-                    }
-                    return url;
-                })
-                .filter(url => {
-                    // Filter by protocol
-                    if (protocolFilter === 'https') return url.startsWith('https://');
-                    if (protocolFilter === 'http') return url.startsWith('http://');
-                    return url.startsWith('http://') || url.startsWith('https://');
-                })
-                .filter(url => {
-                    // Filter by domain if specified
-                    if (!domainFilter) return true;
-                    const domains = domainFilter.split(',').map(d => d.trim());
-                    return domains.some(domain => url.toLowerCase().includes(domain));
-                })
-                .filter(url => {
-                    // Remove trailing punctuation
-                    return url.replace(/[.,;:!?)]+$/, '');
-                })
-                .map(url => {
-                    // Remove common trailing characters
-                    return url.replace(/['"<>()\\]+$/, '');
-                });
-            
-            // Remove duplicates while preserving order
-            urls = [...new Set(urls)];
-            
-            // Apply sorting
-            if (sortBy === 'domain') {
-                urls.sort((a, b) => {
-                    const domainA = getDomain(a).toLowerCase();
-                    const domainB = getDomain(b).toLowerCase();
-                    return domainA.localeCompare(domainB);
-                });
-            } else if (sortBy === 'protocol') {
-                urls.sort((a, b) => {
-                    const protocolA = a.startsWith('https') ? 1 : 0;
-                    const protocolB = b.startsWith('https') ? 1 : 0;
-                    return protocolB - protocolA;
-                });
-            }
-            
-            extractedURLs = urls;
-            displayURLs(urls);
-        }
-
-        function getDomain(url) {
-            try {
-                const urlObj = new URL(url);
-                return urlObj.hostname;
-            } catch {
-                return url.split('/')[2] || url;
-            }
-        }
-
-        function getURLType(url) {
-            if (url.startsWith('https://')) return 'https';
-            if (url.startsWith('http://')) return 'http';
-            return 'default';
-        }
-
-        function isFileURL(url) {
-            const lowerUrl = url.toLowerCase();
-            return FILE_EXTENSIONS.some(ext => lowerUrl.includes(ext));
-        }
-
-        function isImageURL(url) {
-            const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', '.webp'];
-            const lowerUrl = url.toLowerCase();
-            return imageExtensions.some(ext => lowerUrl.includes(ext));
-        }
-
-        function getDomainColor(domain) {
-            if (!domainColors[domain]) {
-                // Generate a consistent color for each domain
-                const colors = ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0', '#607D8B', 
-                              '#795548', '#FF5722', '#009688', '#3F51B5', '#E91E63'];
-                const index = Object.keys(domainColors).length % colors.length;
-                domainColors[domain] = colors[index];
-            }
-            return domainColors[domain];
-        }
-
-        function displayURLs(urls) {
+            const inputText = document.getElementById('inputText').value;
             const urlList = document.getElementById('urlList');
-            const emptyState = document.getElementById('emptyState');
-            const domainLegend = document.getElementById('domainLegend');
-            const totalCount = document.getElementById('totalCount');
-            const httpCount = document.getElementById('httpCount');
-            const httpsCount = document.getElementById('httpsCount');
-            const fileUrls = document.getElementById('fileUrls');
-            const uniqueDomains = document.getElementById('uniqueDomains');
             
-            if (urls.length === 0) {
-                urlList.style.display = 'none';
-                emptyState.style.display = 'block';
-                domainLegend.style.display = 'none';
-                totalCount.textContent = '0';
-                showNotification('No URLs found matching your criteria!', 'warning');
+            if (!inputText.trim()) {
+                showNotification('Please enter some text first!');
                 return;
             }
             
-            // Calculate statistics
-            const domains = new Set();
-            let httpUrls = 0;
-            let httpsUrls = 0;
-            let fileUrlCount = 0;
+            // Simple regex to find URLs (more reliable)
+            const urlRegex = /https?:\/\/[^\s"'<>()\[\]{}]+/gi;
+            let urls = inputText.match(urlRegex) || [];
             
-            urls.forEach(url => {
-                domains.add(getDomain(url));
-                if (url.startsWith('http://')) httpUrls++;
-                if (url.startsWith('https://')) httpsUrls++;
-                if (isFileURL(url)) fileUrlCount++;
-            });
+            // Also find URLs in quotes
+            const quotedUrls = inputText.match(/https?:\/\/[^"'<>()\[\]{}]+/gi) || [];
+            urls = [...new Set([...urls, ...quotedUrls])];
             
-            // Update statistics
-            totalCount.textContent = urls.length;
-            httpCount.textContent = httpUrls;
-            httpsCount.textContent = httpsUrls;
-            uniqueDomains.textContent = domains.size;
-            fileUrls.textContent = fileUrlCount;
+            // Clean URLs
+            urls = urls
+                .map(url => url.replace(/[.,;:]$/, '')) // Remove trailing punctuation
+                .filter(url => url.length > 10) // Filter out very short strings
+                .filter((url, index, self) => self.indexOf(url) === index); // Remove duplicates
             
-            // Clear and populate URL list
-            urlList.innerHTML = '';
-            domainColors = {}; // Reset domain colors
+            // Update stats
+            const httpUrls = urls.filter(url => url.startsWith('http://')).length;
+            const httpsUrls = urls.filter(url => url.startsWith('https://')).length;
             
+            document.getElementById('totalCount').textContent = urls.length;
+            document.getElementById('httpCount').textContent = httpUrls;
+            document.getElementById('httpsCount').textContent = httpsUrls;
+            
+            // Display URLs
+            if (urls.length === 0) {
+                urlList.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">No URLs found in the text</p>';
+                showNotification('No URLs found!');
+                return;
+            }
+            
+            let html = '';
             urls.forEach((url, index) => {
-                const domain = getDomain(url);
-                const urlType = getURLType(url);
-                const isFile = isFileURL(url);
-                const isImage = isImageURL(url);
-                const domainColor = getDomainColor(domain);
-                
-                const li = document.createElement('li');
-                li.className = 'url-item';
-                
-                // Determine URL type for styling
-                let typeLabel = urlType.toUpperCase();
-                let color = URL_COLORS[urlType];
-                
-                if (isImage) {
-                    typeLabel = 'IMAGE';
-                    color = URL_COLORS.image;
-                } else if (isFile) {
-                    typeLabel = 'FILE';
-                    color = URL_COLORS.file;
-                } else if (url.toLowerCase().includes('api')) {
-                    typeLabel = 'API';
-                    color = URL_COLORS.api;
-                }
-                
-                li.innerHTML = `
-                    <div class="url-content">
-                        <div class="url-text">${index + 1}. ${url}</div>
-                        <div class="url-meta">
-                            <span class="url-domain" style="background-color: ${domainColor}20; color: ${domainColor};">
-                                <span class="domain-color" style="background: ${domainColor};"></span>
-                                ${domain}
-                            </span>
-                            <span class="url-type" style="background-color: ${color}20; color: ${color};">
-                                ${typeLabel}
-                            </span>
-                            <span>${url.length} chars</span>
+                html += `
+                    <div class="url-item">
+                        <div class="url-text">
+                            <strong>${index + 1}.</strong> ${url}
                         </div>
-                    </div>
-                    <div class="url-actions">
-                        <button class="action-btn copy-btn" onclick="copyURL('${url}', ${index + 1})">
-                            📋 Copy
-                        </button>
-                        <button class="action-btn" onclick="openURL('${url}')" title="Open in new tab">
-                            ↗️ Open
-                        </button>
-                        <button class="action-btn" onclick="testURL('${url}', ${index + 1})" title="Test URL">
-                            🔗 Test
+                        <button class="copy-btn" onclick="copyURL('${url.replace(/'/g, "\\'")}')">
+                            Copy
                         </button>
                     </div>
                 `;
-                
-                urlList.appendChild(li);
             });
             
-            urlList.style.display = 'block';
-            emptyState.style.display = 'none';
-            domainLegend.style.display = 'flex';
-            
-            showNotification(`Extracted ${urls.length} URLs from ${domains.size} unique domains!`, 'success');
+            urlList.innerHTML = html;
+            showNotification(`Found ${urls.length} URLs!`);
         }
-
-        function copyURL(url, index) {
+        
+        function copyURL(url) {
             navigator.clipboard.writeText(url).then(() => {
-                showNotification(`Copied URL #${index} to clipboard!`);
+                showNotification('URL copied!');
             }).catch(err => {
-                showNotification('Failed to copy URL!', 'error');
-                console.error('Copy failed:', err);
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = url;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showNotification('URL copied!');
             });
         }
-
+        
         function copyAllURLs() {
-            if (extractedURLs.length === 0) {
-                showNotification('No URLs to copy!', 'warning');
+            const urlItems = document.querySelectorAll('.url-text');
+            if (urlItems.length === 0) {
+                showNotification('No URLs to copy!');
                 return;
             }
             
-            const allURLs = extractedURLs.join('\n');
-            navigator.clipboard.writeText(allURLs).then(() => {
-                showNotification(`Copied ${extractedURLs.length} URLs to clipboard!`);
+            const urls = Array.from(urlItems).map(item => {
+                return item.textContent.replace(/^\d+\.\s*/, '');
+            });
+            
+            navigator.clipboard.writeText(urls.join('\n')).then(() => {
+                showNotification(`Copied ${urls.length} URLs!`);
             });
         }
-
-        function openURL(url) {
-            window.open(url, '_blank', 'noopener,noreferrer');
-        }
-
-        function testURL(url, index) {
-            showNotification(`Testing URL #${index}...`, 'warning');
-            
-            // Simple HEAD request to test URL
-            fetch(url, { method: 'HEAD', mode: 'no-cors' })
-                .then(() => {
-                    showNotification(`URL #${index} is accessible!`);
-                })
-                .catch(() => {
-                    showNotification(`URL #${index} might be blocked by CORS or unreachable`, 'warning');
-                });
-        }
-
-        function clearAll() {
-            document.getElementById('textInput').value = '';
-            document.getElementById('htmlInput').value = '';
-            document.getElementById('domainFilter').value = '';
-            extractedURLs = [];
-            domainColors = {};
-            
-            const urlList = document.getElementById('urlList');
-            const emptyState = document.getElementById('emptyState');
-            const domainLegend = document.getElementById('domainLegend');
-            
-            urlList.style.display = 'none';
-            emptyState.style.display = 'block';
-            domainLegend.style.display = 'none';
-            
+        
+        function clearText() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('urlList').innerHTML = 
+                '<p style="text-align: center; color: #999; padding: 20px;">URLs will appear here after extraction</p>';
             document.getElementById('totalCount').textContent = '0';
             document.getElementById('httpCount').textContent = '0';
             document.getElementById('httpsCount').textContent = '0';
-            document.getElementById('uniqueDomains').textContent = '0';
-            document.getElementById('fileUrls').textContent = '0';
-            
-            showNotification('All inputs and results cleared!');
+            showNotification('Text cleared!');
         }
+        
+        function loadExample() {
+            const exampleText = `Here are various types of URLs:
 
-        function loadSampleData() {
-            const sampleText = `🌐 Welcome to the Universal URL Extractor!
-
-Here are various types of URLs:
-
-🔗 Basic URLs:
+🌐 Basic URLs:
 https://www.google.com
 http://example.com
-https://github.com/username
-http://old-website.org
+https://github.com/octocat
 
 🖼️ Image URLs:
 https://images.unsplash.com/photo-1506744038136-46273834b3fb
 https://picsum.photos/200/300
 http://placekitten.com/200/300
-https://example.com/images/logo.png
 
 📁 File URLs:
 https://example.com/document.pdf
 http://downloads.example.com/file.zip
 https://cdn.example.com/script.js
-https://fonts.googleapis.com/css?family=Roboto
 
 🎥 Media URLs:
 https://www.youtube.com/watch?v=dQw4w9WgXcQ
 https://vimeo.com/123456789
-https://soundcloud.com/artist/track
 
-🛒 E-commerce:
-https://www.amazon.com/dp/B08N5WRWNW
-https://www.ebay.com/itm/1234567890
-
-📚 Educational:
-https://www.coursera.org/learn/machine-learning
-https://www.khanacademy.org/
-https://arxiv.org/abs/2101.12345
-
-📄 Here's some HTML code with URLs:
-<a href="https://www.google.com" target="_blank">Google</a>
-<img src="https://via.placeholder.com/150" alt="Placeholder">
+📄 HTML Example:
+<a href="https://www.google.com">Google</a>
+<img src="https://via.placeholder.com/150">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 🌍 API Endpoints:
 https://api.github.com/users/octocat
 https://jsonplaceholder.typicode.com/posts
-http://api.openweathermap.org/data/2.5/weather
 
-🔐 Secure Login URLs:
-https://accounts.google.com/signin
-https://www.facebook.com/login/
-
-📱 App Store Links:
+📱 App Links:
 https://apps.apple.com/app/id123456789
 https://play.google.com/store/apps/details?id=com.example.app`;
 
-            const sampleHTML = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sample Page</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
-    <header>
-        <nav>
-            <a href="https://www.example.com">Home</a>
-            <a href="https://www.example.com/about">About</a>
-            <a href="https://www.example.com/contact">Contact</a>
-        </nav>
-    </header>
-    
-    <main>
-        <section class="hero">
-            <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba" alt="Mountains" width="800" height="400">
-            <h1>Welcome to Our Website</h1>
-            <p>Check out our <a href="https://www.example.com/services">services</a></p>
-        </section>
-        
-        <section class="resources">
-            <h2>Resources</h2>
-            <ul>
-                <li><a href="https://www.example.com/docs/manual.pdf">Download Manual</a></li>
-                <li><a href="https://www.example.com/videos/tutorial.mp4">Watch Tutorial</a></li>
-                <li><a href="https://api.example.com/data.json">API Data</a></li>
-            </ul>
-        </section>
-        
-        <section class="external-links">
-            <h2>External Links</h2>
-            <a href="https://twitter.com/example">Twitter</a>
-            <a href="https://www.linkedin.com/company/example">LinkedIn</a>
-            <a href="https://github.com/example">GitHub</a>
-        </section>
-    </main>
-    
-    <footer>
-        <p>&copy; 2024 Example Corp. All rights reserved.</p>
-        <p>Email: <a href="mailto:support@example.com">support@example.com</a></p>
-        <p>Phone: <a href="tel:+1234567890">+1 (234) 567-890</a></p>
-    </footer>
-    
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.example.com/custom.js"></script>
-</body>
-</html>`;
-
-            document.getElementById('textInput').value = sampleText;
-            document.getElementById('htmlInput').value = sampleHTML;
-            
-            showNotification('Sample data loaded! Click "Extract All URLs" to see them.', 'success');
+            document.getElementById('inputText').value = exampleText;
+            showNotification('Example loaded! Click "Extract URLs"');
         }
-
-        function downloadURLs() {
-            if (extractedURLs.length === 0) {
-                showNotification('No URLs to download!', 'warning');
-                return;
-            }
-            
-            const content = extractedURLs.join('\n');
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'extracted_urls.txt';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            showNotification(`Downloaded ${extractedURLs.length} URLs as extracted_urls.txt`);
-        }
-
-        function showNotification(message, type = 'success') {
+        
+        function showNotification(message) {
             const notification = document.getElementById('notification');
-            const notificationText = document.getElementById('notificationText');
-            
-            notificationText.textContent = message;
-            notification.className = 'notification';
-            notification.classList.add(type);
+            notification.textContent = message;
             notification.classList.add('show');
             
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 3000);
         }
-
-        // Auto-extract when filters change
-        document.getElementById('protocolFilter').addEventListener('change', function() {
-            if (extractedURLs.length > 0) {
-                extractURLs();
-            }
-        });
-
-        document.getElementById('domainFilter').addEventListener('input', function() {
-            if (extractedURLs.length > 0) {
-                // Debounce the extraction
-                clearTimeout(this.debounceTimeout);
-                this.debounceTimeout = setTimeout(() => {
-                    if (extractedURLs.length > 0) {
-                        extractURLs();
-                    }
-                }, 500);
-            }
-        });
-
-        document.getElementById('sortBy').addEventListener('change', function() {
-            if (extractedURLs.length > 0) {
-                displayURLs(extractedURLs);
-            }
-        });
-
-        // Load sample data on first visit
-        window.onload = () => {
-            setTimeout(() => {
-                if (!localStorage.getItem('sampleLoaded')) {
-                    loadSampleData();
-                    localStorage.setItem('sampleLoaded', 'true');
+        
+        // Auto-extract when user pastes text
+        document.getElementById('inputText').addEventListener('input', function() {
+            // Debounce the extraction
+            clearTimeout(this.debounceTimer);
+            this.debounceTimer = setTimeout(() => {
+                if (this.value.length > 50) {
+                    extractURLs();
                 }
             }, 1000);
-        };
+        });
+        
+        // Initialize with example on first load
+        window.onload = loadExample;
     </script>
 </body>
 </html>
